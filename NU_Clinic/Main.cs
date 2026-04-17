@@ -507,6 +507,7 @@ namespace NU_Clinic
         {
             Load3();
 
+
         }
         public void Load3()
         {

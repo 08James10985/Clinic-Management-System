@@ -8,6 +8,8 @@ namespace NU_Clinic
 {
     public partial class WarehouseStockForm : Form
     {
+        // API-FIRST INTEGRATION: This form uses HttpClient ONLY
+        // No direct database connection - all data comes from PHP REST API
         private const string API_BASE = "http://localhost/finalintegproject/ioms_web/api";
 
         private static readonly HttpClient _http = new HttpClient
@@ -17,12 +19,11 @@ namespace NU_Clinic
 
         private Label lblTitle, lblProductId, lblQuantity, lblStatus;
         private TextBox txtProductId, txtQuantity;
-        private Button btnCheckStock, btnDeductStock;
-
+        private Button btnCheckStock, btnDeductStock, btnRefresh;
         private DataGridView dgvProducts;
         private Timer refreshTimer;
-
-        private bool isUserInteracting = false;
+        private string selectedRowId = null;
+        private bool isBusy = false; // prevents status override during actions
 
         public WarehouseStockForm()
         {
@@ -34,152 +35,275 @@ namespace NU_Clinic
         private void SetupControls()
         {
             this.Text = "Warehouse Stock Manager";
-            this.Size = new System.Drawing.Size(700, 500);
+            this.Dock = DockStyle.Fill;
+            this.BackColor = System.Drawing.Color.White;
 
             lblTitle = new Label()
             {
                 Text = "Medical Supply Warehouse",
                 Font = new System.Drawing.Font("Arial", 14, System.Drawing.FontStyle.Bold),
-                Location = new System.Drawing.Point(20, 20),
-                Size = new System.Drawing.Size(400, 30)
+                Dock = DockStyle.None,
+                Location = new System.Drawing.Point(20, 15),
+                Size = new System.Drawing.Size(500, 30),
+                ForeColor = System.Drawing.Color.FromArgb(31, 60, 102)
             };
 
-            lblProductId = new Label() { Text = "Product ID:", Location = new System.Drawing.Point(20, 70) };
-            txtProductId = new TextBox() { Location = new System.Drawing.Point(110, 67), Size = new System.Drawing.Size(80, 20) };
+            // ── Row 1: Product ID + Quantity ─────────────────────────
+            lblProductId = new Label()
+            {
+                Text = "Product ID:",
+                Location = new System.Drawing.Point(20, 58),
+                Size = new System.Drawing.Size(75, 22),
+                TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            };
+            txtProductId = new TextBox()
+            {
+                Location = new System.Drawing.Point(96, 57),
+                Size = new System.Drawing.Size(70, 22)
+            };
 
-            lblQuantity = new Label() { Text = "Quantity:", Location = new System.Drawing.Point(210, 70) };
-            txtQuantity = new TextBox() { Location = new System.Drawing.Point(280, 67), Size = new System.Drawing.Size(80, 20) };
+            lblQuantity = new Label()
+            {
+                Text = "Quantity:",
+                Location = new System.Drawing.Point(180, 58),
+                Size = new System.Drawing.Size(65, 22),
+                TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            };
+            txtQuantity = new TextBox()
+            {
+                Location = new System.Drawing.Point(247, 57),
+                Size = new System.Drawing.Size(70, 22)
+            };
 
+            // ── Row 2: Buttons ────────────────────────────────────────
             btnCheckStock = new Button()
             {
                 Text = "Check Stock",
-                Location = new System.Drawing.Point(20, 100),
-                Size = new System.Drawing.Size(110, 30)
+                Location = new System.Drawing.Point(20, 88),
+                Size = new System.Drawing.Size(110, 28),
+                BackColor = System.Drawing.Color.FromArgb(31, 60, 102),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
             };
+            btnCheckStock.FlatAppearance.BorderSize = 0;
 
             btnDeductStock = new Button()
             {
                 Text = "Deduct Stock",
-                Location = new System.Drawing.Point(140, 100),
-                Size = new System.Drawing.Size(110, 30),
-                Enabled = false
+                Location = new System.Drawing.Point(138, 88),
+                Size = new System.Drawing.Size(110, 28),
+                BackColor = System.Drawing.Color.FromArgb(192, 0, 0),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Enabled = false,
+                Cursor = Cursors.Hand
             };
+            btnDeductStock.FlatAppearance.BorderSize = 0;
 
+            btnRefresh = new Button()
+            {
+                Text = "↺ Refresh",
+                Location = new System.Drawing.Point(256, 88),
+                Size = new System.Drawing.Size(85, 28),
+                BackColor = System.Drawing.Color.FromArgb(0, 130, 0),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnRefresh.FlatAppearance.BorderSize = 0;
+
+            // ── Status label ──────────────────────────────────────────
             lblStatus = new Label()
             {
-                Text = "Loading data...",
-                Location = new System.Drawing.Point(20, 140),
-                Size = new System.Drawing.Size(640, 20),
+                Text = "Loading...",
+                Location = new System.Drawing.Point(20, 124),
+                Size = new System.Drawing.Size(900, 20),
                 ForeColor = System.Drawing.Color.Blue
             };
 
+            // ── DataGridView ──────────────────────────────────────────
             dgvProducts = new DataGridView()
             {
-                Location = new System.Drawing.Point(20, 170),
-                Size = new System.Drawing.Size(640, 270),
+                Location = new System.Drawing.Point(20, 150),
+                Anchor = AnchorStyles.Top | AnchorStyles.Bottom |
+                         AnchorStyles.Left | AnchorStyles.Right,
+                Size = new System.Drawing.Size(900, 380),
                 ReadOnly = true,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                MultiSelect = false,
+                AllowUserToAddRows = false,
+                BackgroundColor = System.Drawing.Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                RowHeadersVisible = false,
+                ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
+                AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle()
+                {
+                    BackColor = System.Drawing.Color.FromArgb(240, 244, 250)
+                }
             };
 
-            // Events
+            // Wire events
             btnCheckStock.Click += BtnCheckStock_Click;
             btnDeductStock.Click += BtnDeductStock_Click;
+            btnRefresh.Click += (s, e) => { isBusy = false; LoadProducts(); };
 
             dgvProducts.CellDoubleClick += DgvProducts_CellDoubleClick;
+            dgvProducts.CellClick += (s, e) =>
+            {
+                if (e.RowIndex < 0) return;
 
-            dgvProducts.CellClick += (s, e) => isUserInteracting = true;
-            dgvProducts.MouseEnter += (s, e) => isUserInteracting = true;
-            dgvProducts.MouseLeave += (s, e) => isUserInteracting = false;
+                refreshTimer?.Stop();
+                isBusy = true;
+
+                var row = dgvProducts.Rows[e.RowIndex];
+                selectedRowId = row.Cells["id"].Value.ToString();
+                txtProductId.Text = selectedRowId;
+                txtQuantity.Text = "1";
+
+                lblStatus.Text = $"Selected: {row.Cells["name"].Value}  |  Stock: {row.Cells["stock"].Value}";
+                lblStatus.ForeColor = System.Drawing.Color.FromArgb(31, 60, 102);
+
+                // ── Auto-trigger Check Stock so Deduct becomes enabled ──
+                BtnCheckStock_Click(this, EventArgs.Empty);
+
+                // Resume silent refresh after 15 seconds
+                System.Threading.Tasks.Task.Delay(15000).ContinueWith(t =>
+                {
+                    this.Invoke((Action)(() =>
+                    {
+                        isBusy = false;
+                        refreshTimer?.Start();
+                    }));
+                });
+            };
 
             this.Controls.AddRange(new Control[]
             {
-                lblTitle, lblProductId, txtProductId,
-                lblQuantity, txtQuantity,
-                btnCheckStock, btnDeductStock,
-                lblStatus, dgvProducts
+                lblTitle,
+                lblProductId, txtProductId,
+                lblQuantity,  txtQuantity,
+                btnCheckStock, btnDeductStock, btnRefresh,
+                lblStatus,
+                dgvProducts
             });
         }
 
+        // ── LOAD ────────────────────────────────────────────────────
         private void WarehouseStockForm_Load(object sender, EventArgs e)
         {
             LoadProducts();
 
-            refreshTimer = new Timer();
-            refreshTimer.Interval = 3000;
+            refreshTimer = new Timer() { Interval = 5000 };
             refreshTimer.Tick += (s, ev) =>
             {
-                if (!isUserInteracting)
-                    LoadProducts();
+                if (!isBusy) // only refresh status if no action is happening
+                    LoadProductsSilent();
             };
             refreshTimer.Start();
         }
 
+        // Silent refresh — updates grid but does NOT touch lblStatus
+        private async void LoadProductsSilent()
+        {
+            try
+            {
+                string json = await _http.GetStringAsync($"{API_BASE}/get_products.php");
+                var obj = JObject.Parse(json);
+                if ((bool)obj["success"])
+                {
+                    var products = obj["products"].ToObject<System.Data.DataTable>();
+                    refreshTimer?.Stop();
+                    dgvProducts.DataSource = products;
+                    RestoreSelectedRow();
+                    refreshTimer?.Start();
+                }
+            }
+            catch { } // silent — don't override status
+        }
+
+        // Full load — shows status message
         private async void LoadProducts()
         {
             try
             {
-                object selectedId = null;
-
-                if (dgvProducts.CurrentRow != null &&
-                    dgvProducts.CurrentRow.Cells["id"].Value != null)
-                {
-                    selectedId = dgvProducts.CurrentRow.Cells["id"].Value;
-                }
-
                 string json = await _http.GetStringAsync($"{API_BASE}/get_products.php");
                 var obj = JObject.Parse(json);
-
                 if ((bool)obj["success"])
                 {
                     var products = obj["products"].ToObject<System.Data.DataTable>();
+                    refreshTimer?.Stop();
                     dgvProducts.DataSource = products;
+                    RestoreSelectedRow();
+                    refreshTimer?.Start();
 
-                    // restore selected row
-                    if (selectedId != null)
+                    if (!isBusy)
                     {
-                        foreach (DataGridViewRow row in dgvProducts.Rows)
-                        {
-                            if (row.Cells["id"].Value.ToString() == selectedId.ToString())
-                            {
-                                row.Selected = true;
-                                dgvProducts.CurrentCell = row.Cells[0];
-                                break;
-                            }
-                        }
+                        lblStatus.Text = $"✅ Loaded {products.Rows.Count} products from warehouse.";
+                        lblStatus.ForeColor = System.Drawing.Color.Green;
                     }
-
-                    lblStatus.Text = $"Loaded {products.Rows.Count} products.";
-                    lblStatus.ForeColor = System.Drawing.Color.Green;
                 }
             }
             catch
             {
-                lblStatus.Text = "Cannot connect to warehouse.";
+                lblStatus.Text = "🔴 Cannot connect to warehouse. Is XAMPP Apache running?";
                 lblStatus.ForeColor = System.Drawing.Color.Red;
             }
         }
 
-        private void DgvProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void RestoreSelectedRow()
         {
-            if (e.RowIndex >= 0)
+            if (selectedRowId == null) return;
+            foreach (DataGridViewRow row in dgvProducts.Rows)
             {
-                var row = dgvProducts.Rows[e.RowIndex];
-
-                txtProductId.Text = row.Cells["id"].Value.ToString();
-                txtQuantity.Text = "1";
-
-                lblStatus.Text = $"Selected: {row.Cells["name"].Value}";
-                lblStatus.ForeColor = System.Drawing.Color.Blue;
+                if (row.Cells["id"].Value?.ToString() == selectedRowId)
+                {
+                    row.Selected = true;
+                    dgvProducts.CurrentCell = row.Cells[0];
+                    break;
+                }
             }
         }
 
+        // ── DOUBLE CLICK ─────────────────────────────────────────────
+        private void DgvProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            refreshTimer?.Stop();
+            isBusy = true;
+
+            var row = dgvProducts.Rows[e.RowIndex];
+            selectedRowId = row.Cells["id"].Value.ToString();
+            txtProductId.Text = selectedRowId;
+            txtQuantity.Text = "1";
+
+            lblStatus.Text = $"Selected: {row.Cells["name"].Value}  |  Stock: {row.Cells["stock"].Value}";
+            lblStatus.ForeColor = System.Drawing.Color.FromArgb(31, 60, 102);
+
+            // Resume silent refresh after 15 seconds
+            System.Threading.Tasks.Task.Delay(15000).ContinueWith(t =>
+            {
+                this.Invoke((Action)(() =>
+                {
+                    isBusy = false;
+                    refreshTimer?.Start();
+                }));
+            });
+        }
+
+        // ── CHECK STOCK ──────────────────────────────────────────────
         private async void BtnCheckStock_Click(object sender, EventArgs e)
         {
             if (!int.TryParse(txtProductId.Text.Trim(), out int productId))
             {
-                lblStatus.Text = "Enter valid Product ID.";
+                SetStatus("⚠️ Enter a valid numeric Product ID.", System.Drawing.Color.Orange);
                 return;
             }
+
+            isBusy = true;
+            SetStatus("Checking stock...", System.Drawing.Color.Gray);
 
             try
             {
@@ -191,33 +315,40 @@ namespace NU_Clinic
                     int stock = (int)obj["stock"];
                     bool avail = (bool)obj["available"];
 
-                    lblStatus.Text = avail
-                        ? $"{obj["name"]} — Stock: {stock}"
-                        : $"{obj["name"]} — Out of stock";
-
-                    lblStatus.ForeColor = avail
-                        ? System.Drawing.Color.Green
-                        : System.Drawing.Color.Orange;
-
                     btnDeductStock.Enabled = avail;
+
+                    SetStatus(
+                        avail
+                            ? $"✅ {obj["name"]} — Stock: {stock} units. Available!"
+                            : $"⚠️ {obj["name"]} — Out of stock!",
+                        avail ? System.Drawing.Color.Green : System.Drawing.Color.Orange
+                    );
+                }
+                else
+                {
+                    SetStatus("❌ " + obj["message"], System.Drawing.Color.Red);
                 }
             }
             catch
             {
-                lblStatus.Text = "Cannot connect to warehouse.";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
+                SetStatus("🔴 Cannot connect to warehouse. Is XAMPP Apache running?", System.Drawing.Color.Red);
             }
         }
 
+        // ── DEDUCT STOCK ─────────────────────────────────────────────
         private async void BtnDeductStock_Click(object sender, EventArgs e)
         {
             if (!int.TryParse(txtProductId.Text.Trim(), out int productId) ||
                 !int.TryParse(txtQuantity.Text.Trim(), out int quantity) ||
                 quantity <= 0)
             {
-                lblStatus.Text = "Enter valid Product ID and Quantity.";
+                SetStatus("⚠️ Enter valid Product ID and Quantity (> 0).", System.Drawing.Color.Orange);
                 return;
             }
+
+            isBusy = true;
+            btnDeductStock.Enabled = false;
+            SetStatus("Processing deduction...", System.Drawing.Color.Gray);
 
             try
             {
@@ -229,27 +360,36 @@ namespace NU_Clinic
                 });
 
                 var content = new StringContent(payload, Encoding.UTF8, "application/json");
-
                 var response = await _http.PostAsync($"{API_BASE}/deduct_stock.php", content);
                 string json = await response.Content.ReadAsStringAsync();
-
                 var obj = JObject.Parse(json);
 
-                lblStatus.Text = (bool)obj["success"]
-                    ? $"{obj["message"]} | Remaining: {obj["remaining_stock"]}"
-                    : obj["message"].ToString();
+                bool success = (bool)obj["success"];
 
-                lblStatus.ForeColor = (bool)obj["success"]
-                    ? System.Drawing.Color.Green
-                    : System.Drawing.Color.Red;
+                SetStatus(
+                    success
+                        ? $"✅ {obj["message"]}  |  Order #{obj["order_id"]}  |  Remaining: {obj["remaining_stock"]} units"
+                        : $"❌ {obj["message"]}",
+                    success ? System.Drawing.Color.Green : System.Drawing.Color.Red
+                );
 
-                LoadProducts(); // instant refresh
+                if (success)
+                {
+                    selectedRowId = null;
+                    LoadProductsSilent(); // refresh grid quietly
+                }
             }
             catch
             {
-                lblStatus.Text = "Cannot connect to warehouse.";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
+                SetStatus("🔴 Cannot connect to warehouse. Is XAMPP Apache running?", System.Drawing.Color.Red);
             }
+        }
+
+        // ── HELPER ───────────────────────────────────────────────────
+        private void SetStatus(string text, System.Drawing.Color color)
+        {
+            lblStatus.Text = text;
+            lblStatus.ForeColor = color;
         }
     }
 }

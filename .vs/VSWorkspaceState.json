@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\NU_Clinic"
   ],
-  "SelectedNode": "\\nuclinic.sql",
+  "SelectedNode": "\\NU_Clinic\\AddPatient.Designer.cs",
   "PreviewInSolutionExplorer": false
 }

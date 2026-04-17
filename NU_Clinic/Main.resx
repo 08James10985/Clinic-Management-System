@@ -313,7 +313,7 @@
   <data name="bunifuSeparator1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAUCAIAAABj86gYAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAAACtJREFUSEtjsOndQ1PEgClEXTRqAUE0agFBNGoBQTRqAUE0agFBNGoBQQQAfHDM
+        wQAADsEBuJFr7QAAACtJREFUSEtjsOndQ1PEgClEXTRqAUE0agFBNGoBQTRqAUE0agFBNGoBQQQAfHDM
         rr0N/egAAAAASUVORK5CYII=
 </value>
   </data>
@@ -383,7 +383,7 @@
   <data name="bunifuSeparator2.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAUCAIAAABj86gYAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAAACtJREFUSEtjsOndQ1PEgClEXTRqAUE0agFBNGoBQTRqAUE0agFBNGoBQQQAfHDM
+        wQAADsEBuJFr7QAAACtJREFUSEtjsOndQ1PEgClEXTRqAUE0agFBNGoBQTRqAUE0agFBNGoBQQQAfHDM
         rr0N/egAAAAASUVORK5CYII=
 </value>
   </data>
@@ -1167,7 +1167,7 @@
   <data name="btnAdd.Iconimage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAMw0lEQVR4Xu2d
+        wQAADsEBuJFr7QAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAMw0lEQVR4Xu2d
         a8g9VRXGu3oJQrtgF8vuKhqhKFhfQskP+cFAKrM+aJCUkBFJJWqkYdrFkiCiAikIsoI0Syu6qZRmecss
         Eiut7KZYpgZlN59YsF7W8Vkzc2bOmTlz1p/nBz+Q57/3nDmuvd9zzsyemUcBeJSUstkUSCnDFEgpwxRI
         KcMUSCnDFEgpwxRIKcMUSCnDFEgpwxRIKcMUSCnDFEgpwxRIKcMUSCnDFEgpwxRIKcMUSCnDFEgpwxRI
