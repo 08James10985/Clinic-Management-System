@@ -1,0 +1,48 @@
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\bin\Debug\NU_Clinic.exe.config
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\bin\Debug\NU_Clinic.exe
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\bin\Debug\NU_Clinic.pdb
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\bin\Debug\Bunifu_UI_v1.52.dll
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.csprojResolveAssemblyReference.cache
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.Properties.Resources.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.csproj.GenerateResource.Cache
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.csproj.CoreCompileInputs.cache
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.exe
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.pdb
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.frmLogin.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.frmMain.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\bin\Debug\MySql.Data.dll
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\bin\Debug\MySql.Data.xml
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.frmPatient.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.frmViewPatient.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.frmAddPatient.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.csproj.CopyComplete
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.DoctorList.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.Category.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.Course.resources
+C:\Users\jeremydvera\Documents\Visual Studio 2017\NU_Clinic\obj\Debug\NU_Clinic.Diagnosis.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\NU_Clinic\obj\Debug\NU_Clinic.exe
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\NU_Clinic\obj\Debug\NU_Clinic.pdb
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\bin\Debug\NU_Clinic.exe.config
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\bin\Debug\NU_Clinic.exe
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\bin\Debug\NU_Clinic.pdb
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\bin\Debug\Bunifu_UI_v1.52.dll
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\bin\Debug\Newtonsoft.Json.dll
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\bin\Debug\MySql.Data.xml
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\bin\Debug\Newtonsoft.Json.xml
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.csproj.AssemblyReference.cache
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.frmAddPatient.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.Category.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.Course.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.Diagnosis.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.DoctorList.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.frmLogin.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.frmMain.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.frmPatient.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.Properties.Resources.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.frmViewPatient.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.WarehouseStockForm.resources
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.csproj.GenerateResource.cache
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.csproj.CoreCompileInputs.cache
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.csproj.CopyComplete
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.exe
+C:\xampp\htdocs\finalintegproject\clinic_desktop\NU_Clinic\obj\Debug\NU_Clinic.pdb
